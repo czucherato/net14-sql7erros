@@ -21,9 +21,10 @@ namespace MeuTrabalho.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Index(LoginViewModel model)
         {
+            SqlConnection connection = null;
             try
             {
-                SqlConnection connection = new SqlConnection("Server=saturnoserver.database.windows.net;Database=MEUDB;User=aclogin;Password=homework-jan31");
+                connection = new SqlConnection("Server=saturnoserver.database.windows.net;Database=MEUDB;User=aclogin;Password=homework-jan31");
                 SqlCommand cmd = new SqlCommand($"SELECT username FROM tbLogin WHERE email='{model.Email}' AND pwd='{model.Password}'", connection);
 
                 connection.Open();
@@ -36,6 +37,10 @@ namespace MeuTrabalho.Controllers
             catch(Exception ex)
             {
                 return View(model);
+            }
+            finally
+            {
+                connection.Close();
             }
         }
     }
